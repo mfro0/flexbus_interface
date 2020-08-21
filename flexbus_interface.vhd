@@ -23,7 +23,7 @@ entity flexbus_interface is
         oe_n        : out std_ulogic;
         rw_n        : out std_ulogic;
         tbst_n      : out std_ulogic;
-        size        : out std_ulogic_vector(3 downto 1);
+        size        : out std_ulogic_vector(3 downto 1)
     );
 end entity flexbus_interface;
 
