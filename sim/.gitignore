@@ -1,0 +1,9 @@
+*.cf
+*.ghw
+altera
+fmf
+transcript
+*.wlf
+wlft*
+work
+*.ppf
