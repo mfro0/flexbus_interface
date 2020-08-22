@@ -149,7 +149,7 @@ BEGIN
 		clk0_divide_by => 1,
 		clk0_duty_cycle => 50,
 		clk0_multiply_by => 2,
-		clk0_phase_shift => "8000",
+		clk0_phase_shift => "10062",
 		clk1_divide_by => 1,
 		clk1_duty_cycle => 50,
 		clk1_multiply_by => 4,
@@ -159,7 +159,7 @@ BEGIN
 		intended_device_family => "Cyclone III",
 		lpm_hint => "CBX_MODULE_PREFIX=flexbus_pll",
 		lpm_type => "altpll",
-		operation_mode => "SOURCE_SYNCHRONOUS",
+		operation_mode => "NORMAL",
 		pll_type => "AUTO",
 		port_activeclock => "PORT_UNUSED",
 		port_areset => "PORT_UNUSED",
@@ -266,7 +266,7 @@ END SYN;
 -- Retrieval info: PRIVATE: MIRROR_CLK1 STRING "0"
 -- Retrieval info: PRIVATE: MULT_FACTOR0 NUMERIC "2"
 -- Retrieval info: PRIVATE: MULT_FACTOR1 NUMERIC "1"
--- Retrieval info: PRIVATE: NORMAL_MODE_RADIO STRING "0"
+-- Retrieval info: PRIVATE: NORMAL_MODE_RADIO STRING "1"
 -- Retrieval info: PRIVATE: OUTPUT_FREQ0 STRING "66.00000000"
 -- Retrieval info: PRIVATE: OUTPUT_FREQ1 STRING "132.00000000"
 -- Retrieval info: PRIVATE: OUTPUT_FREQ_MODE0 STRING "0"
@@ -275,7 +275,7 @@ END SYN;
 -- Retrieval info: PRIVATE: OUTPUT_FREQ_UNIT1 STRING "MHz"
 -- Retrieval info: PRIVATE: PHASE_RECONFIG_FEATURE_ENABLED STRING "1"
 -- Retrieval info: PRIVATE: PHASE_RECONFIG_INPUTS_CHECK STRING "0"
--- Retrieval info: PRIVATE: PHASE_SHIFT0 STRING "8.00000000"
+-- Retrieval info: PRIVATE: PHASE_SHIFT0 STRING "10.06154300"
 -- Retrieval info: PRIVATE: PHASE_SHIFT1 STRING "8.00000000"
 -- Retrieval info: PRIVATE: PHASE_SHIFT_STEP_ENABLED_CHECK STRING "0"
 -- Retrieval info: PRIVATE: PHASE_SHIFT_UNIT0 STRING "ns"
@@ -300,7 +300,7 @@ END SYN;
 -- Retrieval info: PRIVATE: SPREAD_FREQ_UNIT STRING "KHz"
 -- Retrieval info: PRIVATE: SPREAD_PERCENT STRING "0.500"
 -- Retrieval info: PRIVATE: SPREAD_USE STRING "0"
--- Retrieval info: PRIVATE: SRC_SYNCH_COMP_RADIO STRING "1"
+-- Retrieval info: PRIVATE: SRC_SYNCH_COMP_RADIO STRING "0"
 -- Retrieval info: PRIVATE: STICKY_CLK0 STRING "1"
 -- Retrieval info: PRIVATE: STICKY_CLK1 STRING "1"
 -- Retrieval info: PRIVATE: SWITCHOVER_COUNT_EDIT NUMERIC "1"
@@ -317,7 +317,7 @@ END SYN;
 -- Retrieval info: CONSTANT: CLK0_DIVIDE_BY NUMERIC "1"
 -- Retrieval info: CONSTANT: CLK0_DUTY_CYCLE NUMERIC "50"
 -- Retrieval info: CONSTANT: CLK0_MULTIPLY_BY NUMERIC "2"
--- Retrieval info: CONSTANT: CLK0_PHASE_SHIFT STRING "8000"
+-- Retrieval info: CONSTANT: CLK0_PHASE_SHIFT STRING "10062"
 -- Retrieval info: CONSTANT: CLK1_DIVIDE_BY NUMERIC "1"
 -- Retrieval info: CONSTANT: CLK1_DUTY_CYCLE NUMERIC "50"
 -- Retrieval info: CONSTANT: CLK1_MULTIPLY_BY NUMERIC "4"
@@ -326,7 +326,7 @@ END SYN;
 -- Retrieval info: CONSTANT: INCLK0_INPUT_FREQUENCY NUMERIC "30303"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altpll"
--- Retrieval info: CONSTANT: OPERATION_MODE STRING "SOURCE_SYNCHRONOUS"
+-- Retrieval info: CONSTANT: OPERATION_MODE STRING "NORMAL"
 -- Retrieval info: CONSTANT: PLL_TYPE STRING "AUTO"
 -- Retrieval info: CONSTANT: PORT_ACTIVECLOCK STRING "PORT_UNUSED"
 -- Retrieval info: CONSTANT: PORT_ARESET STRING "PORT_UNUSED"
