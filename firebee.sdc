@@ -66,12 +66,12 @@ set flexbus_in_ports [list FB_AD[*] FB_ALE FB_OEn FB_SIZE[*] FB_CSn[*] FB_WRn]
 set flexbus_out_ports [list FB_AD[*] FB_TAn]
 
  foreach in_port $flexbus_in_ports {
-    set_input_delay -clock virt_clk_main -add_delay -min 1 $in_port
-    set_input_delay -clock virt_clk_main -add_delay -max 7 $in_port
+    set_input_delay -clock virt_clk_main -min 1 $in_port
+    set_input_delay -clock virt_clk_main -max 7 $in_port
 }
 
 foreach out_port $flexbus_out_ports {
-    set_output_delay -clock virt_clk_main -add_delay -min  0 $out_port
-    set_output_delay -clock virt_clk_main -add_delay -max  3.5 $out_port
+    set_output_delay -clock virt_clk_main -min  0 $out_port
+    set_output_delay -clock virt_clk_main -max  3.5 $out_port
 }
 

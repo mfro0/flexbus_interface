@@ -37,6 +37,8 @@ begin
         edge_detect := edge_detect(0) & FB_ALE;
         if edge_detect = "01" then
             phase_counter <= 0;
+        elsif phase_counter = 7 then
+            phase_counter <= 0;
         else
             phase_counter <= phase_counter + 1;
         end if;

@@ -31,7 +31,7 @@ architecture arch of firebee is
 
     signal fb_i         : work.firebee_package.flexbus_in_type;
 
-    constant BUS_MEMBERS: integer := 10;
+    constant BUS_MEMBERS: integer := 3;
 
     type fb_os_type is array(0 to BUS_MEMBERS - 1) of work.firebee_package.flexbus_out_type;
     signal fb_o         : fb_os_type;
@@ -58,7 +58,7 @@ begin
     -- multiplex register outputs
     p_register_multiplexer : process
     begin
-        wait until rising_edge(clk132);
+        wait until rising_edge(clk66);
         FB_AD <= (others => 'Z');
         FB_TAn <= '1';
         for i in 0 to BUS_MEMBERS - 1 loop

@@ -1,38 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity videl_test is
-    generic
-    (
-        VERSION             : std_logic;
+entity flexbus_tb is
+end entity flexbus_tb;
 
-        -- generics that enable only part of the
-        -- design. Useful for testing module by module
-        -- without the need to synthesize  everything
-        WITH_ACIA_KEYBOARD  : boolean := TRUE;
-        WITH_ACIA_MIDI      : boolean := TRUE;
-        WITH_BLITTER        : boolean := TRUE;
-        WITH_DMA            : boolean := TRUE;
-        WITH_DSP            : boolean := TRUE;
-        WITH_IDE            : boolean := TRUE;
-        WITH_SCSI           : boolean := TRUE;
-        WITH_SOUND          : boolean := TRUE;
-        WITH_FDC            : boolean := TRUE;
-        WITH_RTC            : boolean := TRUE
-    );
-end entity videl_test;
-
-architecture sim of videl_test is
-    signal rsto_mcf_n           : std_logic;
-
+architecture sim of flexbus_tb is
     -- clocks
-    signal clk_33m0_in          : std_logic;
     signal clk_main             : std_logic := '0';
-    signal clk_24m576,
-           clk_25m0,
-           clk_ddr_out,
-           clk_ddr_out_n,
-           clk_usb              : std_logic;
 
     -- FlexBus signals
     signal fb_ad                : std_logic_vector(31 downto 0);
@@ -51,142 +25,7 @@ architecture sim of videl_test is
            tout0_n,
 
            led_fpga_ok          : std_logic;
-
-    -- DDR memory control signals
-    signal ba                   : std_logic_vector(1 downto 0);
-    signal va                   : std_logic_vector(12 downto 0);
-    signal vwe_n,
-           vcas_n,
-           vras_n,
-           vcs_n,
-           vcke                 : std_logic;
-    signal vdm                  : std_logic_vector(3 downto 0);
-    signal vd                   : std_logic_vector(31 downto 0);
-    signal vdqs                 : std_logic_vector(3 downto 0);
-
-    -- video signals
-    signal clk_pixel,
-           sync_n,
-           vsync,
-           hsync,
-           blank_n              : std_logic;
-
-    signal vr,
-           vg,
-           vb                   : std_logic_vector(7 downto 0);
-
-    signal pd_vga_n,
-           pic_int,
-           e0_int,
-           dvi_int,
-           pci_inta_n,
-           pci_intb_n,
-           pci_intc_n,
-           pci_intd_n           : std_logic;
-    signal irq_n                : std_logic_vector(7 downto 2);
-    signal tin0,
-
-    -- sound subsystem signals
-           ym_qa,
-           ym_qb,
-           ym_qc                : std_logic;
-
-    signal lp_d                 : std_logic_vector(7 downto 0);
-    signal lp_dir,
-           lp_busy,
-           lp_str,
-
-           dsa_d,
-           dtr,
-           rts,
-           cts,
-           ri,
-           dcd,
-           rxd,
-           txd,
-
-           midi_in,
-           midi_olr,
-           midi_tlr,
-
-           amkb_rx_pic,
-           amkb_rx,
-           amkb_tx,
-
-           scsi_drq_n,
-           scsi_msg_n,
-           scsi_cd_n,
-           scsi_io_n,
-           scsi_ack_n,
-           scsi_atn_n,
-           scsi_sel_n,
-           scsi_busy_n,
-           scsi_rst_n,
-           scsi_dir             : std_logic;
-
-    signal scsi_d               : std_logic_vector(7 downto 0);
-
-    signal scsi_par,
-
-           acsi_dir             : std_logic;
-    signal acsi_d               : std_logic_vector(7 downto 0);
-    signal acsi_cs_n,
-           acsi_a1,
-           acsi_reset_n,
-           acsi_ack_n,
-           acsi_drq_n,
-           acsi_int_n           : std_logic;
-
-    -- Floppy Disk
-    signal fdd_dchg_n,
-           fdd_sdsel_n,
-           fdd_hd_dd,
-           fdd_rd_n,
-           fdd_track00,
-           fdd_index_n,
-           fdd_wp_n,
-           fdd_mot_on,
-           fdd_wr_gate_n,
-           fdd_wd_n,
-           fdd_step_n,
-           fdd_step_dir,
-
-           rom4_n,
-           rom3_n,
-
-           rp_uds_n,
-           rp_lds_n,
-
-           sd_clk,
-           sd_cmd_d1,
-           sd_d3,
-           sd_d0,
-           sd_d1,
-           sd_d2,
-           sd_detect,
-           sd_wp,
-
-           cf_wp                : std_logic;
-    signal cf_cs_n              : std_logic_vector(1 downto 0);
-
-    signal dsp_io               : std_logic_vector(17 downto 0);
-    signal dsp_srd              : std_logic_vector(15 downto 0);
-
-    signal dsp_srcs_n,
-           dsp_srble_n,
-           dsp_srbhe_n,
-           dsp_srwe_n,
-           dsp_sroe_n,
-
-           ide_int,
-           ide_rdy,
-           ide_res_n,
-           ide_wr_n,
-           ide_rd_n             : std_logic;
-    signal ide_cs_n             : std_logic_vector(1 downto 0);
-
-    signal io                   : std_logic_vector(2 downto 0);
-
+    
     signal pll_locked           : boolean := false;
 
     constant MAIN_CLOCK_PERIOD  : time := 30.03 ns;
@@ -381,11 +220,13 @@ begin
     -- be locked and everything initialized. Since we can't see from the
     -- outside when this is finished, we just wait for the DDR clock to
     -- start ticking and add a few additional wait cycles
+
     catch_pll_start : process
-        variable counter    : integer := 0;
         constant WAIT_COUNT : integer := 5;
+        variable counter    : integer range 0 to WAIT_COUNT := 0;
     begin
-        wait until rising_edge(clk_ddr_out);
+        -- VHDL 2008 can reference external names. Nice!
+        wait until rising_edge(<< signal fb.clk66 : std_ulogic >>);
         if counter < WAIT_COUNT then
             counter := counter + 1;
         else
@@ -395,166 +236,18 @@ begin
 
     -- implement uut
     fb : entity work.firebee
-        generic map
-        (
-            VERSION     => x"20200A00",
-
-            WITH_ACIA_KEYBOARD  => WITH_ACIA_KEYBOARD,
-            WITH_ACIA_MIDI      => WITH_ACIA_MIDI,
-            WITH_BLITTER        => WITH_BLITTER,
-            WITH_DMA            => WITH_DMA,
-            WITH_DSP            => WITH_DSP,
-            WITH_IDE            => WITH_IDE,
-            WITH_SCSI           => WITH_SCSI,
-            WITH_SOUND          => WITH_SOUND,
-            WITH_FDC            => WITH_FDC,
-            WITH_RTC            => WITH_RTC
-        )
         port map
         (
-            RSTO_MCFn       => rsto_mcf_n,
-            CLK_33M0_IN     => clk_33m0_in,
             CLK_MAIN        => clk_main,
-            CLK_24M576      => clk_24m576,
-            CLK_25M0        => clk_25m0,
-            CLK_DDR_OUT     => clk_ddr_out,
-            CLK_DDR_OUTn    => clk_ddr_out_n,
-            CLK_USB         => clk_usb,
 
             FB_AD           => fb_ad,
             FB_ALE          => fb_ale,
-            FB_BURSTn       => fb_burst_n,
+            FB_TBSTn        => fb_burst_n,
             FB_CSn          => fb_cs_n,
             FB_SIZE         => fb_size,
             FB_OEn          => fb_oe_n,
             FB_WRn          => fb_wr_n,
-            FB_TAn          => fb_ta_n,
-
-            DACK0n          => dack0_n,
-            DACK1n          => dack1_n,
-            DREQ1n          => dreq1_n,
-            MASTERn         => master_n,
-            TOUT0n          => tout0_n,
-            LED_FPGA_OK     => led_fpga_ok,
-            BA              => ba,
-            VA              => va,
-            VWEn            => vwe_n,
-            VCASn           => vcas_n,
-            VRASn           => vras_n,
-            VCSn            => vcs_n,
-            VCKE            => vcke,
-            VDM             => vdm,
-            VD              => vd,
-            VDQS            => vdqs,
-            CLK_PIXEL       => clk_pixel,
-            SYNCn           => sync_n,
-            VSYNC           => vsync,
-            HSYNC           => hsync,
-            BLANKn          => blank_n,
-            VR              => vr,
-            VG              => vg,
-            VB              => vb,
-            PD_VGAn         => pd_vga_n,
-            PIC_INT         => pic_int,
-            E0_INT          => e0_int,
-            DVI_INT         => dvi_int,
-            PCI_INTAn       => pci_inta_n,
-            PCI_INTBn       => pci_intb_n,
-            PCI_INTCn       => pci_intc_n,
-            PCI_INTDn       => pci_intd_n,
-            IRQn            => irq_n,
-            TIN0            => tin0,
-            YM_QA           => ym_qa,
-            YM_QB           => ym_qb,
-            YM_QC           => ym_qc,
-            LP_D            => lp_d,
-            LP_DIR          => lp_dir,
-            LP_BUSY         => lp_busy,
-            LP_STR          => lp_str,
-            DSA_D           => dsa_d,
-            DTR             => dtr,
-            RTS             => rts,
-            CTS             => cts,
-            RI              => ri,
-            DCD             => dcd,
-            RxD             => rxd,
-            TxD             => txd,
-            MIDI_IN         => midi_in,
-            MIDI_OLR        => midi_olr,
-            MIDI_TLR        => midi_tlr,
-            AMKB_Rx_PIC     => amkb_rx_pic,
-            AMKB_Rx         => amkb_rx,
-            AMKB_Tx         => amkb_tx,
-            SCSI_DRQn       => scsi_drq_n,
-            SCSI_MSGn       => scsi_msg_n,
-            SCSI_CDn        => scsi_cd_n,
-            SCSI_IOn        => scsi_io_n,
-            SCSI_ACKn       => scsi_ack_n,
-            SCSI_ATNn       => scsi_atn_n,
-            SCSI_SELn       => scsi_sel_n,
-            SCSI_BUSYn      => scsi_busy_n,
-            SCSI_RSTn       => scsi_rst_n,
-            SCSI_DIR        => scsi_dir,
-            SCSI_D          => scsi_d,
-            SCSI_PAR        => scsi_par,
-
-            ACSI_DIR        => acsi_dir,
-            ACSI_D          => acsi_d,
-            ACSI_CSn        => acsi_cs_n,
-            ACSI_A1         => acsi_a1,
-            ACSI_RESETn     => acsi_reset_n,
-            ACSI_ACKn       => acsi_ack_n,
-            ACSI_DRQn       => acsi_drq_n,
-            ACSI_INTn       => acsi_int_n,
-
-            -- Floppy Disk
-            FDD_DCHGn       => fdd_dchg_n,
-            FDD_SDSELn      => fdd_sdsel_n,
-            FDD_HD_DD       => fdd_hd_dd,
-            FDD_RDn         => fdd_rd_n,
-            FDD_TRACK00     => fdd_track00,
-            FDD_INDEXn      => fdd_index_n,
-            FDD_WPn         => fdd_wp_n,
-            FDD_MOT_ON      => fdd_mot_on,
-            FDD_WR_GATEn    => fdd_wr_gate_n,
-            FDD_WDn         => fdd_wd_n,
-            FDD_STEPn       => fdd_step_n,
-            FDD_STEP_DIR    => fdd_step_dir,
-
-            ROM4n           => rom4_n,
-            ROM3n           => rom3_n,
-
-            RP_UDSn         => rp_uds_n,
-            RP_LDSn         => rp_lds_n,
-
-            SD_CLK          => sd_clk,
-            SD_CMD_D1       => sd_cmd_d1,
-            SD_D3           => sd_d3,
-            SD_D0           => sd_d0,
-            SD_D1           => sd_d1,
-            SD_D2           => sd_d2,
-            SD_DETECT       => sd_detect,
-            SD_WP           => sd_wp,
-
-            CF_WP           => cf_wp,
-            CF_CSn          => cf_cs_n,
-
-            DSP_IO          => dsp_io,
-            DSP_SRD         => dsp_srd,
-            DSP_SRCSn       => dsp_srcs_n,
-            DSP_SRBLEn      => dsp_srble_n,
-            DSP_SRBHEn      => dsp_srbhe_n,
-            DSP_SRWEn       => dsp_srwe_n,
-            DSP_SROEn       => dsp_sroe_n,
-
-            IDE_INT         => ide_int,
-            IDE_RDY         => ide_rdy,
-            IDE_RESn        => ide_res_n,
-            IDE_WRn         => ide_wr_n,
-            IDE_RDn         => ide_rd_n,
-            IDE_CSn         => ide_cs_n,
-
-            IO              => io
+            FB_TAn          => fb_ta_n
         );
 
 end architecture sim;

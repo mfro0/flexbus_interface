@@ -149,11 +149,11 @@ BEGIN
 		clk0_divide_by => 1,
 		clk0_duty_cycle => 50,
 		clk0_multiply_by => 2,
-		clk0_phase_shift => "9848",
+		clk0_phase_shift => "9825",
 		clk1_divide_by => 1,
 		clk1_duty_cycle => 50,
 		clk1_multiply_by => 4,
-		clk1_phase_shift => "8000",
+		clk1_phase_shift => "105",
 		compensate_clock => "CLK0",
 		inclk0_input_frequency => 30303,
 		intended_device_family => "Cyclone III",
@@ -275,8 +275,8 @@ END SYN;
 -- Retrieval info: PRIVATE: OUTPUT_FREQ_UNIT1 STRING "MHz"
 -- Retrieval info: PRIVATE: PHASE_RECONFIG_FEATURE_ENABLED STRING "1"
 -- Retrieval info: PRIVATE: PHASE_RECONFIG_INPUTS_CHECK STRING "0"
--- Retrieval info: PRIVATE: PHASE_SHIFT0 STRING "9.84847500"
--- Retrieval info: PRIVATE: PHASE_SHIFT1 STRING "8.00000000"
+-- Retrieval info: PRIVATE: PHASE_SHIFT0 STRING "9.82480100"
+-- Retrieval info: PRIVATE: PHASE_SHIFT1 STRING "0.10521900"
 -- Retrieval info: PRIVATE: PHASE_SHIFT_STEP_ENABLED_CHECK STRING "0"
 -- Retrieval info: PRIVATE: PHASE_SHIFT_UNIT0 STRING "ns"
 -- Retrieval info: PRIVATE: PHASE_SHIFT_UNIT1 STRING "ns"
@@ -317,11 +317,11 @@ END SYN;
 -- Retrieval info: CONSTANT: CLK0_DIVIDE_BY NUMERIC "1"
 -- Retrieval info: CONSTANT: CLK0_DUTY_CYCLE NUMERIC "50"
 -- Retrieval info: CONSTANT: CLK0_MULTIPLY_BY NUMERIC "2"
--- Retrieval info: CONSTANT: CLK0_PHASE_SHIFT STRING "9848"
+-- Retrieval info: CONSTANT: CLK0_PHASE_SHIFT STRING "9825"
 -- Retrieval info: CONSTANT: CLK1_DIVIDE_BY NUMERIC "1"
 -- Retrieval info: CONSTANT: CLK1_DUTY_CYCLE NUMERIC "50"
 -- Retrieval info: CONSTANT: CLK1_MULTIPLY_BY NUMERIC "4"
--- Retrieval info: CONSTANT: CLK1_PHASE_SHIFT STRING "8000"
+-- Retrieval info: CONSTANT: CLK1_PHASE_SHIFT STRING "105"
 -- Retrieval info: CONSTANT: COMPENSATE_CLOCK STRING "CLK0"
 -- Retrieval info: CONSTANT: INCLK0_INPUT_FREQUENCY NUMERIC "30303"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"

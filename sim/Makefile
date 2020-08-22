@@ -22,65 +22,11 @@ PATH := $(PATH):$(VSIM_PATH)
 all: work-obj08.cf
 
 FILES= \
-	../rtl/vhdl/Firebee/altpll2.vhd \
-	../rtl/vhdl/Firebee/Firebee_pkg.vhd \
-	../rtl/vhdl/DDR/DDR_CTRL.vhd \
-	../rtl/vhdl/WF5380/wf5380_pkg.vhd \
-	../rtl/vhdl/WF5380/wf5380_soc_top.vhd \
-	../rtl/vhdl/WF5380/wf5380_control.vhd \
-	../rtl/vhdl/WF5380/wf5380_registers.vhd \
-	../rtl/vhdl/Video/video_top.vhd \
-	../rtl/vhdl/Video/video_ctrl.vhd \
-	../rtl/vhdl/Video/falcon_dpram.vhd \
-	../rtl/vhdl/Video/st_dpram.vhd \
-	../rtl/vhdl/Video/fbee_dpram.vhd \
-	../rtl/vhdl/Video/lpm_fifoDZ.vhd \
-	../rtl/vhdl/Video/lpm_fifo_dc0.vhd \
-	../rtl/vhdl/Blitter/Blitter_WF.vhd \
-	../rtl/vhdl/DMA/fbee_dma.vhd \
-	../rtl/vhdl/DMA/dcfifo1.vhd \
-	../rtl/vhdl/DMA/dcfifo0.vhd \
-	../rtl/vhdl/Peripherals/ide_cf_sd_rom.vhd \
-	../rtl/vhdl/Interrupt/interrupt.vhd \
-	../rtl/vhdl/RTC/rtc.vhd \
-	../rtl/vhdl/DSP/DSP.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_pkg.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_top.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_top_soc.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_transceiver.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_control.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_registers.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_am_detector.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_crc_logic.vhd \
-	../rtl/vhdl/WF_FDC1772_IP/wf1772ip_digital_pll.vhd \
-	../rtl/vhdl/WF_UART6850_IP/wf6850ip_top_soc.vhd \
-	../rtl/vhdl/WF_UART6850_IP/wf6850ip_receive.vhd \
-	../rtl/vhdl/WF_UART6850_IP/wf6850ip_transmit.vhd \
-	../rtl/vhdl/WF_UART6850_IP/wf6850ip_ctrl_status.vhd \
-	../rtl/vhdl/WF_SND2149_IP/wf2149ip_pkg.vhd \
-	../rtl/vhdl/WF_SND2149_IP/wf2149ip_top_soc.vhd \
-	../rtl/vhdl/WF_SND2149_IP/wf2149ip_top.vhd \
-	../rtl/vhdl/WF_SND2149_IP/wf2149ip_wave.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_pkg.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_top_soc.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_usart_top.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_usart_ctrl.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_usart_rx.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_usart_tx.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_timers.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_interrupts.vhd \
-	../rtl/vhdl/WF_MFP68901_IP/wf68901ip_gpio.vhd \
-	../rtl/vhdl/Firebee/altpll4.vhd \
-	../rtl/vhdl/Firebee/altpll3.vhd \
-	../rtl/vhdl/Firebee/altpll1.vhd \
-	../rtl/vhdl/Firebee/altpll_reconfig1.vhd \
-	../rtl/vhdl/Firebee/ddr_vdm_out.vhd \
-	../rtl/vhdl/Firebee/ddr_vd_bidir.vhd \
-	../rtl/vhdl/Firebee/rgb_out.vhd  \
-	k4h511638f.vhd \
-	dual_ddr.vhd \
-	../rtl/vhdl/Firebee/flexbus_interface.vhd \
-	../rtl/vhdl/Firebee/Firebee_Top.vhd \
+    ../firebee_package.vhd \
+	../flexbus_interface.vhd \
+    ../flexbus_pll.vhd \
+    ../flexbus_register.vhd \
+    ../firebee.vhd
 
 #TOPLEVEL_GENERICS=\
 #	-gWITH_ACIA_KEYBOARD=\'1\' \
@@ -136,15 +82,12 @@ view_videl: videl
 # simulate using modelsim
 PATH := /opt/altera/13.1/modelsim_ase/bin:$(PATH)
 
-.PHONY: ms_videl
-ms_videl: $(FILES)
-	vlib fmf
-	vcom -work fmf -2008 conversions.vhd gen_utils.vhd
+.PHONY: ms_flexbus
+ms_flexbus: $(FILES)
 	vlib work
 	vcom -2008 $(FILES)
-	vcom -2008 videl_test.vhd
-	$(VSIM) -gVERSION=0 -gWITH_ACIA_KEYBOARD=false -gWITH_ACIA_MIDI=false -gWITH_BLITTER=false \
-		    -gWITH_DMA=false -gWITH_SCSI=false -gWITH_SOUND=false -gWITH_FDC=false -gWITH_RTC=false videl_test
+	vcom -2008 flexbus_tb.vhd
+	$(VSIM) flexbus_tb
 
 .PHONY: run_mfp
 run_mfp: mfp
