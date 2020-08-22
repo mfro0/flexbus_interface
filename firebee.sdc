@@ -38,14 +38,14 @@ set_clock_groups -asynchronous \
                           CLK_MAIN }
 
 
-# set_multicycle_path -setup -end -from virt_clk_main -to i_pll1*clk[0] 2
-# set_multicycle_path -hold -end -from virt_clk_main -to i_pll1*clk[0] 1
+# set_multicycle_path -setup -end -from virt_clk_main -to i_pll*clk[0] 2
+# set_multicycle_path -hold -end -from virt_clk_main -to i_pll*clk[0] 1
 
-# set_multicycle_path -setup -start -from I_PLL1|*clk[1] -to virt_clk_main 4
-# set_multicycle_path -hold -start -from I_PLL1|*clk[1] -to virt_clk_main 3
+# set_multicycle_path -setup -start -from i_pll|*clk[1] -to virt_clk_main 4
+# set_multicycle_path -hold -start -from i_pll|*clk[1] -to virt_clk_main 3
 
-# set_multicycle_path -setup -end -from CLK_MAIN -to i_pll1|*|clk[1] 4
-# set_multicycle_path -hold -end -from CLK_MAIN -to i_pll1|*|clk[1] 3
+# set_multicycle_path -setup -end -from CLK_MAIN -to i_pll|*|clk[1] 4
+# set_multicycle_path -hold -end -from CLK_MAIN -to i_pll|*|clk[1] 3
 
 # FlexBus Timing Characteristics
 #
