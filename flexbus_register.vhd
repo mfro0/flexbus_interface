@@ -25,9 +25,10 @@ begin
         wait until rising_edge(clk132);
         
         if i.rw_n = '0' then
-            contents <= i.data_in;
+            contents <= i.data_in(REGISTER_WIDTH - 1 downto 0);
         else
-            o.data_out <= contents;
+            o.data_out <= (others => '0');
+            o.data_out(REGISTER_WIDTH - 1 downto 0) <= contents;
             o.ta_n <= '0';
         end if;
     end process p_act;

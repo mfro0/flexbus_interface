@@ -30,7 +30,26 @@ architecture arch of firebee is
            tbst_n,
            ta_n         : std_ulogic;
     signal size         : std_ulogic_vector(1 downto 0);
+    
+    signal fb_i         : work.firebee_package.flexbus_in_type;
+    signal fb_o         : work.firebee_package.flexbus_out_type;
 begin
+
+    gen_registers: for i in 0 to 9 generate
+        i_reg : entity work.flexbus_register
+            generic map
+            (
+                REGISTER_ADDRESS => std_logic_vector(x"FF00400" + to_unsigned(i, 32)),
+                REGISTER_WIDTH => 8
+            )
+            port map
+            (
+                clk132  => clk132,
+                i       => fb_i,
+                o       => fb_o
+            );
+    end generate;
+            
     i_pll : entity work.flexbus_pll
         port map
         (
@@ -63,6 +82,4 @@ begin
             tbst_n      => tbst_n,
             size        => size
         );
-      
-            
 end architecture arch;

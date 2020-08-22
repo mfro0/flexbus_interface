@@ -1,9 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-library fmf;
-use fmf.all;
 
 entity videl_test is
     generic
@@ -27,23 +23,23 @@ entity videl_test is
 end entity videl_test;
 
 architecture sim of videl_test is
-    signal rsto_mcf_n       : std_logic;
+    signal rsto_mcf_n           : std_logic;
 
     -- clocks
-    signal clk_33m0_in      : std_logic;
-    signal clk_main         : std_logic := '0';
+    signal clk_33m0_in          : std_logic;
+    signal clk_main             : std_logic := '0';
     signal clk_24m576,
            clk_25m0,
            clk_ddr_out,
            clk_ddr_out_n,
-           clk_usb          : std_logic;
+           clk_usb              : std_logic;
 
     -- FlexBus signals
-    signal fb_ad            : std_logic_vector(31 downto 0);
+    signal fb_ad                : std_logic_vector(31 downto 0);
     signal fb_ale,
-           fb_burst_n       : std_logic;
-    signal fb_cs_n          : std_logic_vector(3 downto 1);
-    signal fb_size          : std_logic_vector(1 downto 0);
+           fb_burst_n           : std_logic;
+    signal fb_cs_n              : std_logic_vector(3 downto 1);
+    signal fb_size              : std_logic_vector(1 downto 0);
     signal fb_oe_n,
            fb_wr_n,
            fb_ta_n,
@@ -54,30 +50,30 @@ architecture sim of videl_test is
            master_n,
            tout0_n,
 
-           led_fpga_ok      : std_logic;
+           led_fpga_ok          : std_logic;
 
     -- DDR memory control signals
-    signal ba               : std_logic_vector(1 downto 0);
-    signal va               : std_logic_vector(12 downto 0);
+    signal ba                   : std_logic_vector(1 downto 0);
+    signal va                   : std_logic_vector(12 downto 0);
     signal vwe_n,
            vcas_n,
            vras_n,
            vcs_n,
-           vcke             : std_logic;
-    signal vdm              : std_logic_vector(3 downto 0);
-    signal vd               : std_logic_vector(31 downto 0);
-    signal vdqs             : std_logic_vector(3 downto 0);
+           vcke                 : std_logic;
+    signal vdm                  : std_logic_vector(3 downto 0);
+    signal vd                   : std_logic_vector(31 downto 0);
+    signal vdqs                 : std_logic_vector(3 downto 0);
 
     -- video signals
     signal clk_pixel,
            sync_n,
            vsync,
            hsync,
-           blank_n          : std_logic;
+           blank_n              : std_logic;
 
     signal vr,
            vg,
-           vb               : std_logic_vector(7 downto 0);
+           vb                   : std_logic_vector(7 downto 0);
 
     signal pd_vga_n,
            pic_int,
@@ -86,16 +82,16 @@ architecture sim of videl_test is
            pci_inta_n,
            pci_intb_n,
            pci_intc_n,
-           pci_intd_n       : std_logic;
-    signal irq_n            : std_logic_vector(7 downto 2);
+           pci_intd_n           : std_logic;
+    signal irq_n                : std_logic_vector(7 downto 2);
     signal tin0,
 
     -- sound subsystem signals
            ym_qa,
            ym_qb,
-           ym_qc            : std_logic;
+           ym_qc                : std_logic;
 
-    signal lp_d             : std_logic_vector(7 downto 0);
+    signal lp_d                 : std_logic_vector(7 downto 0);
     signal lp_dir,
            lp_busy,
            lp_str,
@@ -126,20 +122,20 @@ architecture sim of videl_test is
            scsi_sel_n,
            scsi_busy_n,
            scsi_rst_n,
-           scsi_dir         : std_logic;
+           scsi_dir             : std_logic;
 
-    signal scsi_d    : std_logic_vector(7 downto 0);
+    signal scsi_d               : std_logic_vector(7 downto 0);
 
     signal scsi_par,
 
-           acsi_dir         : std_logic;
-    signal acsi_d           : std_logic_vector(7 downto 0);
+           acsi_dir             : std_logic;
+    signal acsi_d               : std_logic_vector(7 downto 0);
     signal acsi_cs_n,
            acsi_a1,
            acsi_reset_n,
            acsi_ack_n,
            acsi_drq_n,
-           acsi_int_n    : std_logic;
+           acsi_int_n           : std_logic;
 
     -- Floppy Disk
     signal fdd_dchg_n,
@@ -170,11 +166,11 @@ architecture sim of videl_test is
            sd_detect,
            sd_wp,
 
-           cf_wp        : std_logic;
-    signal cf_cs_n      : std_logic_vector(1 downto 0);
+           cf_wp                : std_logic;
+    signal cf_cs_n              : std_logic_vector(1 downto 0);
 
-    signal dsp_io       : std_logic_vector(17 downto 0);
-    signal dsp_srd      : std_logic_vector(15 downto 0);
+    signal dsp_io               : std_logic_vector(17 downto 0);
+    signal dsp_srd              : std_logic_vector(15 downto 0);
 
     signal dsp_srcs_n,
            dsp_srble_n,
@@ -186,16 +182,18 @@ architecture sim of videl_test is
            ide_rdy,
            ide_res_n,
            ide_wr_n,
-           ide_rd_n     : std_logic;
-    signal ide_cs_n     : std_logic_vector(1 downto 0);
+           ide_rd_n             : std_logic;
+    signal ide_cs_n             : std_logic_vector(1 downto 0);
 
-    signal io           : std_logic_vector(2 downto 0);
+    signal io                   : std_logic_vector(2 downto 0);
 
-    signal pll_locked   : boolean := false;
+    signal pll_locked           : boolean := false;
+
+    constant MAIN_CLOCK_PERIOD  : time := 30.03 ns;
 begin
     process(clk_main)
     begin
-        clk_main <= not clk_main after 30.03 ns;
+        clk_main <= not clk_main after MAIN_CLOCK_PERIOD;
     end process;
 
     flexbus_sm : block
@@ -396,7 +394,7 @@ begin
     end process catch_pll_start;
 
     -- implement uut
-    fb : entity work.firebee_top
+    fb : entity work.firebee
         generic map
         (
             VERSION     => x"20200A00",
@@ -559,21 +557,5 @@ begin
             IO              => io
         );
 
-    i_ddr : entity work.dual_ddr
-        port map
-        (
-            clk             => clk_ddr_out,
-            clk_n           => clk_ddr_out_n,
-            ba              => ba,
-            va              => va,
-            vwe_n           => vwe_n,
-            vcas_n          => vcas_n,
-            vras_n          => vras_n,
-            vcs_n           => vcs_n,
-            vcke            => vcke,
-            vdm             => vdm,
-            vd              => vd,
-            vdqs            => vdqs
-        );
 end architecture sim;
 
