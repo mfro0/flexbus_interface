@@ -32,10 +32,9 @@ derive_clock_uncertainty
 # post_message "wf=$wf"
 
 set_clock_groups -asynchronous \
-                 -group { I_PLL1|*|pll1|clk[0] \
-                          I_PLL1|*|pll1|clk[1] \
+                 -group { i_pll*clk[0] \
+                          i_pll*clk[1] \
                           virt_clk_main \
-                          virt_clk_ddr \
                           CLK_MAIN }
 
 
