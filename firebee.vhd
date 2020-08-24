@@ -44,7 +44,7 @@ begin
         i_reg : entity work.flexbus_register
             generic map
             (
-                REGISTER_ADDRESS => std_logic_vector(x"FF00400" + to_unsigned(i * 4, 32)),
+                REGISTER_ADDRESS => std_logic_vector(x"F0000400" + to_unsigned(i * 4, 32)),
                 REGISTER_WIDTH => 8
             )
             port map
@@ -59,8 +59,8 @@ begin
     p_register_multiplexer : process
     begin
         wait until rising_edge(clk66);
-        FB_AD <= (others => 'Z');
-        FB_TAn <= '1';
+        FB_AD <= (others => 'Z');           -- tristate FB_AD as default
+        FB_TAn <= '1';                      -- and do not acknowledge anything until we need to
         for i in 0 to BUS_MEMBERS - 1 loop
             if fb_o(i).ta_n = '0' and oe_n = '0' then
                 work.firebee_package.fb_out(fb_o(i), FB_AD, FB_TAn);
