@@ -6,14 +6,14 @@ end entity flexbus_tb;
 
 architecture sim of flexbus_tb is
     -- clocks
-    signal clk_main             : std_logic := '0';
+    signal clk_main                 : std_logic := '0';
 
     -- FlexBus signals
-    signal fb_ad                : std_logic_vector(31 downto 0);
+    signal fb_ad                    : std_logic_vector(31 downto 0);
     signal fb_ale,
-           fb_burst_n           : std_logic;
-    signal fb_cs_n              : std_logic_vector(3 downto 1);
-    signal fb_size              : std_logic_vector(1 downto 0);
+           fb_burst_n               : std_logic;
+    signal fb_cs_n                  : std_logic_vector(3 downto 1);
+    signal fb_size                  : std_logic_vector(1 downto 0);
     signal fb_oe_n,
            fb_wr_n,
            fb_ta_n,
@@ -24,11 +24,11 @@ architecture sim of flexbus_tb is
            master_n,
            tout0_n,
 
-           led_fpga_ok          : std_logic;
+           led_fpga_ok              : std_logic;
     
-    signal pll_locked           : boolean := false;
+    signal pll_locked               : boolean := false;
 
-    constant MAIN_CLOCK_PERIOD  : time := 30.03 ns;
+    constant MAIN_CLOCK_PERIOD      : time := 30.03 ns;
 begin
     process(clk_main)
     begin
@@ -60,7 +60,7 @@ begin
         type fb_sim_records_type is array(natural range <>) of fb_record_type;
 
         -- the actual stimulation data
-        constant fb_stim_data        : fb_sim_records_type :=
+        constant fb_stim_data       : fb_sim_records_type :=
         (
             (
                 address => x"f0000400", data => x"00000000", fb_cs_n => "101",
