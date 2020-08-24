@@ -62,7 +62,7 @@ begin
         FB_AD <= (others => 'Z');           -- tristate FB_AD as default
         FB_TAn <= '1';                      -- and do not acknowledge anything until we need to
         for i in 0 to BUS_MEMBERS - 1 loop
-            if fb_o(i).ta_n = '0' and oe_n = '0' then
+            if fb_o(i).ta_n = '0' then
                 work.firebee_package.fb_out(fb_o(i), FB_AD, FB_TAn);
             end if;
         end loop;
