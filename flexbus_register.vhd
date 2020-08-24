@@ -30,8 +30,11 @@ begin
             else
                 o.data_out <= (others => '0');
                 o.data_out(REGISTER_WIDTH - 1 downto 0) <= contents;
-                o.ta_n <= '0';
             end if;
+            o.ta_n <= '0';
+            -- synthesis translate_off
+            -- report "register address match " & to_hstring(REGISTER_ADDRESS) & " = " & to_hstring(i.address) severity note;
+            -- synthesis translate_on
         else
             o.ta_n <= '1';
         end if;
