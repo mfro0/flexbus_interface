@@ -1,0 +1,8 @@
+*.bak
+*.srf
+*.toml
+db
+greybox_tmp
+incremental_db
+output_files
+

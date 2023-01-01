@@ -23,7 +23,7 @@ set period [expr roundto(1000.0 / $frequency, 3)]
 
 create_clock -period $period -name CLK_MAIN [get_ports {CLK_MAIN}]
 #create_clock -period $period -name CLK_33M0_IN [get_ports {CLK_33M0_IN}]
-create_clock -period $period -name virt_clk_main
+#create_clock -period $period -name virt_clk_main
 
 derive_pll_clocks
 derive_clock_uncertainty
@@ -31,11 +31,10 @@ derive_clock_uncertainty
 # set wf [get_clock_info -waveform I_PLL2|*|pll1|clk[1]]
 # post_message "wf=$wf"
 
-set_clock_groups -asynchronous \
-                 -group { i_pll*clk[0] \
-                          i_pll*clk[1] \
-                          virt_clk_main \
-                          CLK_MAIN }
+#set_clock_groups -asynchronous \
+#                 -group { i_pll*clk[0] \
+#                          virt_clk_main \
+#                          CLK_MAIN }
 
 
 # set_multicycle_path -setup -end -from virt_clk_main -to i_pll*clk[0] 2
@@ -65,13 +64,13 @@ set_clock_groups -asynchronous \
 set flexbus_in_ports [list FB_AD[*] FB_ALE FB_OEn FB_SIZE[*] FB_CSn[*] FB_WRn]
 set flexbus_out_ports [list FB_AD[*] FB_TAn]
 
- foreach in_port $flexbus_in_ports {
-    set_input_delay -clock virt_clk_main -min 1 $in_port
-    set_input_delay -clock virt_clk_main -max 7 $in_port
-}
+#foreach in_port $flexbus_in_ports {
+#    set_input_delay -clock virt_clk_main -min 1 $in_port
+#    set_input_delay -clock virt_clk_main -max 7 $in_port
+#}
 
-foreach out_port $flexbus_out_ports {
-    set_output_delay -clock virt_clk_main -min  0 $out_port
-    set_output_delay -clock virt_clk_main -max  3.5 $out_port
-}
+#foreach out_port $flexbus_out_ports {
+#    set_output_delay -clock virt_clk_main -min  0 $out_port
+#    set_output_delay -clock virt_clk_main -max  3.5 $out_port
+#}
 

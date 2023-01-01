@@ -1,57 +1,86 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity flexbus_interface is
+    generic
+    (
+        BUS_MEMBERS : natural := 10
+    );
     port
     (
-        clk66       : in std_ulogic;
-        clk132      : in std_ulogic;
-            
-        FB_CSn      : in std_ulogic_vector(3 downto 1);
-        FB_AD       : in std_logic_vector(31 downto 0);
-        FB_ALE,
-        FB_OEn,
-        FB_WRn,
-        FB_TBSTn    : in std_ulogic;
-        FB_SIZE     : in std_ulogic_vector(1 downto 0);
-            
-        cs_n        : out std_ulogic_vector(3 downto 1);
-        address     : out std_logic_vector(31 downto 0);
-        data_in     : out std_logic_vector(31 downto 0);
-        oe_n        : out std_ulogic;
-        rw_n        : out std_ulogic;
-        tbst_n      : out std_ulogic;
-        size        : out std_ulogic_vector(1 downto 0);
-        state       : out work.firebee_package.small_int_type
+        clk         : in std_ulogic;
+        fb_i        : in work.firebee_package.flexbus_in_type;
+        fb_o        : out work.firebee_package.flexbus_out_type
     );
 end entity flexbus_interface;
 
 architecture rtl of flexbus_interface is
-    signal phase_counter    : work.firebee_package.small_int_type;
+    signal fb_os    : work.firebee_package.flexbus_os_type(BUS_MEMBERS - 1 downto 0);
+    signal i_fb_o   : work.firebee_package.flexbus_out_type;
 begin
-    p_sync : process
-        variable edge_detect    : std_ulogic_vector(1 downto 0);
+    gen_registers: for i in 0 to BUS_MEMBERS - 1 generate
+        i_reg : entity work.flexbus_register
+            generic map
+            (
+                REGISTER_ADDRESS => std_logic_vector(x"F0000400" + to_unsigned(i * 4, 32)),
+                REGISTER_WIDTH => 32
+            )
+            port map
+            (
+                clk     => clk,
+                i       => fb_i,
+                o       => i_fb_o
+            );
+    end generate;
+    i_drive : entity work.bus_driver
+        generic map
+        (
+            BUS_MEMBERS     => BUS_MEMBERS
+        )
+        port map
+        (
+            clk             => clk,
+            fb_i            => fb_i,
+            fb_os           => FB_OS,
+            fb_o            => fb_o
+        );
+    
+end architecture rtl;
+
+-------------------------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity bus_driver is
+    generic
+    (
+        BUS_MEMBERS     : natural
+    );
+    port
+    (
+        clk     : in std_ulogic;
+        fb_i    : in work.firebee_package.flexbus_in_type;
+        fb_os   : in work.firebee_package.flexbus_os_type(BUS_MEMBERS - 1 downto 0);
+        fb_o    : out work.firebee_package.flexbus_out_type
+    );
+end entity bus_driver;
+
+architecture rtl of bus_driver is
+begin
+    p_drive_bus : process(all)
     begin
-        wait until rising_edge(clk66);
-        
-        edge_detect := edge_detect(0) & FB_ALE;
-        if edge_detect = "01" then
-            phase_counter <= 0;
-        elsif phase_counter = 7 then
-            phase_counter <= 0;
-        else
-            phase_counter <= phase_counter + 1;
+        if rising_edge(clk) then
+            for i in 0 to BUS_MEMBERS - 1 loop
+                if fb_i.oe_n = '0' then
+                    if fb_os(i).ta_n = '0' then
+                        fb_o <= fb_os(i);
+                        exit;
+                    end if;
+                end if;
+            end loop;
         end if;
-        
-        if FB_ALE = '1' then
-            address <= FB_AD;
-        elsif FB_WRn = '0' then
-            data_in <= FB_AD;
-        end if;
-        oe_n <= FB_OEn;
-        rw_n <= FB_WRn;
-        tbst_n <= FB_TBSTn;
-        size <= FB_SIZE;
-        cs_n <= FB_CSn;
-    end process p_sync;
+    end process p_drive_bus;
 end architecture rtl;
