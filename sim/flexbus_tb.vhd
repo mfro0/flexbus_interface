@@ -12,7 +12,7 @@ architecture sim of flexbus_tb is
     signal fb_ad                    : std_logic_vector(31 downto 0);
     signal fb_ale,
            fb_burst_n               : std_logic;
-    signal fb_cs_n                  : std_logic_vector(3 downto 1);
+    signal fb_cs_n                  : std_logic_vector(5 downto 0);
     signal fb_size                  : std_logic_vector(1 downto 0);
     signal fb_oe_n,
            fb_wr_n,
@@ -52,7 +52,7 @@ begin
         type fb_record_type is record
             address                 : std_logic_vector(31 downto 0);
             data                    : std_logic_vector(31 downto 0);
-            fb_cs_n                 : std_logic_vector(3 downto 1);
+            fb_cs_n                 : std_logic_vector(5 downto 0);
             fb_size                 : std_logic_vector(1 downto 0);
             rw_n                    : std_logic;
             desc                    : desc_type;
@@ -63,72 +63,72 @@ begin
         constant fb_stim_data       : fb_sim_records_type :=
         (
             (
-                address => x"f0000400", data => x"00000000", fb_cs_n => "101",
+                address => x"f0000400", data => x"00000000", fb_cs_n => "111011",
                 fb_size => TSZ_LONG, rw_n => RWN_READ, desc => "READ FBEE VIDEO CONFIG REGISTER "
             ),
             -- initialize DDR RAM
             -- this is a direct transliteration from what BaS and BaS_gcc is doing on startup
             (
-                address => x"f0000400", data => x"000B0000", fb_cs_n => "101",
+                address => x"f0000400", data => x"000B0000", fb_cs_n => "111011",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "CKE=1, CS=1, CONFIG=1           "
             ),
             -- need to wait for power up, the DDR model takes 2 µS, the real thing more like 200 µS
             (
-                address => x"f0000400", data => x"00000000", fb_cs_n => "101",
+                address => x"f0000400", data => x"00000000", fb_cs_n => "111011",
                 fb_size => TSZ_LONG, rw_n => RWN_READ, desc => "READ FBEE VIDEO CONFIG REGISTER "
             ),
             (
-                address => x"f0000400", data => x"00000000", fb_cs_n => "101",
+                address => x"f0000400", data => x"00000000", fb_cs_n => "111011",
                 fb_size => TSZ_LONG, rw_n => RWN_READ, desc => "READ FBEE VIDEO CONFIG REGISTER "
             ),
             (
-                address => x"60000000", data => x"00050400", fb_cs_n => "111",
+                address => x"60000000", data => x"00050400", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "IPALL                           "
             ),
             (
-                address => x"60000000", data => x"00072000", fb_cs_n => "111",
+                address => x"60000000", data => x"00072000", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "load EMR PLL ON                 "
             ),
             (
-                address => x"60000000", data => x"00070122", fb_cs_n => "111",
+                address => x"60000000", data => x"00070122", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "load MR RESET PLL CL=2 BURST=41w"
             ),
             (
-                address => x"60000000", data => x"00050400", fb_cs_n => "111",
+                address => x"60000000", data => x"00050400", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "IPALL                           "
             ),
             (
-                address => x"60000000", data => x"00060000", fb_cs_n => "111",
+                address => x"60000000", data => x"00060000", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "auto refresh                    "
             ),
             (
-                address => x"60000000", data => x"00060000", fb_cs_n => "111",
+                address => x"60000000", data => x"00060000", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "auto refresh                    "
             ),
             (
-                address => x"60000000", data => x"00070022", fb_cs_n => "111",
+                address => x"60000000", data => x"00070022", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "load MR DLL ON                  "
             ),
             (
-                address => x"f0000400", data => x"01070082", fb_cs_n => "101",
+                address => x"f0000400", data => x"01070082", fb_cs_n => "111011",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "fifo on refresh on ddrcs on cke "
             ),
             -- write something to DDR RAM
             (
-                address => x"60000000", data => x"01020304", fb_cs_n => "111",
+                address => x"60000000", data => x"01020304", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "write test vector to DDR RAM    "
             ),
             (
-                address => x"60000004", data => x"05060708", fb_cs_n => "111",
+                address => x"60000004", data => x"05060708", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "write test vector to DDR RAM    "
             ),
             -- read it back
             (
-                address => x"60000000", data => x"00000000", fb_cs_n => "111",
+                address => x"60000000", data => x"00000000", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_READ, desc => "read value back from 1st address"
             ),
             (
-                address => x"60000004", data => x"00000000", fb_cs_n => "111",
+                address => x"60000004", data => x"00000000", fb_cs_n => "111111",
                 fb_size => TSZ_LONG, rw_n => RWN_WRITE, desc => "read value back from 2nd address"
             )
         );
@@ -139,7 +139,7 @@ begin
     begin
 
         flexbus_sm : process
-            variable cs_n   : std_logic_vector(3 downto 1);
+            variable cs_n   : std_logic_vector(5 downto 0);
             variable rw_n   : std_logic;
             variable rdata,
                      wdata  : std_logic_vector(31 downto 0);
@@ -162,8 +162,19 @@ begin
                     if rw_n = '0' then              -- write cycle
                          fb_ad <= wdata;
                     else                            -- read cycle
-                        -- TODO: tristate only those bits that are actually used
-                        fb_ad <= (others => 'Z');
+                        -- TODO: this is for 32 bit port size, others need to be handled accordingly
+                        case sz is
+                            when "00" =>    -- longword - all byte lanes used for data
+                                fb_ad <= (others => 'Z');
+                            when "01" =>    -- byte - tristate only first byte
+                                fb_ad(31 downto 24) <= (others => 'Z');     
+                            when "10" =>    -- word - tristate upper word
+                                fb_ad(31 downto 16) <= (others => 'Z');
+                            when "11" =>    -- LINE - tristate all byte lanes
+                                fb_ad <= (others => 'Z');
+                            when others =>
+                                null;
+                        end case;
                         fb_oe_n <= '0';
                     end if;
                     flexbus_state <= S1;
@@ -184,7 +195,7 @@ begin
                         assert false report desc & " " & to_hstring(wdata) severity note;
                     end if;
                     flexbus_state <= S3;
-                    fb_cs_n <= "111";
+                    fb_cs_n <= "111111";
 
                     -- increment index into stimulation vector
                     if stim_index < fb_stim_data'high then
@@ -222,11 +233,11 @@ begin
     -- start ticking and add a few additional wait cycles
 
     catch_pll_start : process
-        constant WAIT_COUNT : integer := 5;
+        constant WAIT_COUNT : integer := 15;
         variable counter    : integer range 0 to WAIT_COUNT := 0;
     begin
         -- VHDL 2008 can reference external names. Nice!
-        wait until rising_edge(<< signal fb.clk66 : std_ulogic >>);
+        wait until rising_edge(<< signal fb.clk : std_ulogic >>);
         if counter < WAIT_COUNT then
             counter := counter + 1;
         else

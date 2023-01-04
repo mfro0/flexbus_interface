@@ -15,7 +15,7 @@ entity flexbus_multiplexer is
         FB_ALE      : in std_ulogic;
         FB_AD       : inout std_logic_vector(31 downto 0);
         FB_TAn      : out std_ulogic;
-        FB_CSn      : in std_ulogic_vector(work.firebee_package.flexbus_in_type.cs_n'range);
+        FB_CSn      : in std_ulogic_vector(5 downto 0);
         FB_OEn      : in std_ulogic;
         FB_WRn      : in std_ulogic;
         fb_i        : out work.firebee_package.flexbus_in_type;

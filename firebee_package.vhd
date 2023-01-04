@@ -32,7 +32,7 @@ package firebee_package is
 
     -- fill in a flexbus_in_type record
     function fb_in(state        : flexbus_state_type;
-                   cs_n         : std_ulogic_vector(3 downto 1);
+                   cs_n         : std_ulogic_vector(5 downto 0);
                    address,
                    data         : std_logic_vector(31 downto 0);
                    oe_n,
@@ -42,7 +42,7 @@ package firebee_package is
 
     -- segregate a flexbus_out_type record in its elements
     procedure fb_out(o : flexbus_out_type;
-                     signal FB_AD  : inout std_logic_vector(31 downto 0);
+                     signal FB_AD  : out std_logic_vector(31 downto 0);
                      signal FB_TAn : out std_ulogic);
 
     -- an address
@@ -57,7 +57,7 @@ package firebee_package is
     end record address_range_type;
     
     type bus_slave_type is record
-        cs              : natural flexbus_in_type'range;
+        -- cs              : natural flexbus_in_type'range;
         address_range   : address_range_type;
     end record bus_slave_type;
     
@@ -67,7 +67,7 @@ end package firebee_package;
 
 package body firebee_package is
     function fb_in(state        : flexbus_state_type;
-                   cs_n         : std_ulogic_vector(flexbus_in_type.cs_n'reverse_range);
+                   cs_n         : std_ulogic_vector(5 downto 0);
                    address,
                    data         : std_logic_vector(31 downto 0);
                    oe_n,
@@ -91,7 +91,7 @@ package body firebee_package is
                " address = " & to_hstring(address) &
                " data = " & to_hstring(data) &
                " oe_n = " & to_string(oe_n) &
-               " rw_n = " & to_string(rw_n) &
+               " rw_n = " & to_string(wr_n) &
                " tbst_n = " & to_string(tbst_n) &
                " size = " & to_string(size) severity note;
         -- synthesis translate_on
